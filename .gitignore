@@ -5,3 +5,4 @@ routes/.DS_Store
 models/.DS_Store
 .env
 package-lock.json
+private.key

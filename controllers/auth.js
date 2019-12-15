@@ -1,6 +1,15 @@
 import statusCode from '../helpers/statusCode';
+const fs   = require('fs');
+const publicKEY  = fs.readFileSync('./public.key', 'utf8');
 
-const jwtSecretKey = process.env.JWT_SECRET_KEY;
+const verifyOptions = {
+    issuer:  i,
+    subject:  s,
+    audience:  a,
+    expiresIn:  "12h",
+    algorithm:  ["RS256"]
+};
+
 const isAuthenticated = (req, res, next)=>{
     let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
     if (token.startsWith('Bearer ')) {
@@ -9,7 +18,7 @@ const isAuthenticated = (req, res, next)=>{
     }
 
     if (token) {
-        jwt.verify(token, jwtSecretKey, (err, decoded) => {
+        jwt.verify(token, publicKEY, verifyOptions,  (err, decoded) => {
         if (err) {
             return res.status(statusCode.unauthorised.code).json(statusCode.unauthorised.reason);
         } else {
