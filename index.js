@@ -11,7 +11,6 @@ const app = express();
 var router = express.Router();
 const port = process.env.PORT || 3000;
 const dbUrl = process.env.DB_URL;
-const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
