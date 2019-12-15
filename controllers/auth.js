@@ -1,12 +1,14 @@
 import statusCode from '../helpers/statusCode';
 const fs   = require('fs');
 const publicKEY  = fs.readFileSync('./public.key', 'utf8');
+const i  = 'Rawble';          // Issuer 
+const a  = 'https://rawble.com'; // Audience
 
 const verifyOptions = {
     issuer:  i,
-    subject:  s,
     audience:  a,
-    expiresIn:  "12h",
+    subject: s,
+    expiresIn:  "2d",
     algorithm:  ["RS256"]
 };
 
