@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 const MaterialModel = mongoose.model('Material', new Schema({ 
     name: String,
     category: String,
-    id: String
+    id: String,
+    imageUrl: String,
+    imageMeta: Object,
 }));
 
 module.exports = MaterialModel;

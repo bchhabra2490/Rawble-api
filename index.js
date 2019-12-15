@@ -11,13 +11,12 @@ const app = express();
 var router = express.Router();
 const port = process.env.PORT || 3000;
 const dbUrl = process.env.DB_URL;
-const jwtSecretKey = process.env.jwtsecretkey;
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 
-mongoose.connect(dbUrl, { useNewUrlParser: true })
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log('mlab connection succesful');
-    console.log("Cron job started");
 }).catch(e=>{
     console.log("Mongoose not connected", dbUrl);
 })
@@ -44,6 +43,12 @@ app.use(function(req, res, next) {
 router.get('/', function(req, res, next) {
     res.json({ title: 'Express' });
 });
+router.post('/login', function(req, res, next) {
+    res.json({ title: 'Express' });
+});
+router.get('/signup', function(req, res, next) {
+    res.json({ title: 'Express' });
+});
 app.all('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -53,3 +58,10 @@ app.all('/', router);
 app.use('/api/v1', indexRouter);
 
 app.listen(port);
+
+process.on('SIGINT', () => { 
+    mongoose.connection.close(()=>{
+        console.log("Mongoose Disconnected"); 
+        process.exit(); 
+    });
+});

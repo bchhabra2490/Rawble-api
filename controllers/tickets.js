@@ -1,3 +1,5 @@
+import statusCode from '../helpers/statusCode';
+
 const createTicket = (req, res)=>{
     // Generate a new ticket on new query
 }
