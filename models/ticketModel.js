@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const TicketModel = mongoose.model('Ticket', new Schema({ 
     id: String,
-    user: {type: Schema.Types.ObjectId, required:true},
+    user: {type: Schema.Types.ObjectId, ref: 'User', required:true},
     materials: [{
         name: String,
         quantity: String,

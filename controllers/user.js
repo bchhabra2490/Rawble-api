@@ -1,4 +1,5 @@
 import statusCode from '../helpers/statusCode';
+import { sendOTP, isPhoneNumberValid } from '../helpers/sendSms';
 
 const privateKEY  = fs.readFileSync('./private.key', 'utf8');
 const i  = 'Rawble';          // Issuer 
@@ -18,18 +19,18 @@ const login = (req, res)=>{
     var token = jwt.sign(payload, privateKEY, signOptions);
 }
 
-const createUser = (req, res)=>{
+const createUser = async (req, res)=>{
     // Create a new User
     // Send OTP for verification
+    if(isPhoneNumberValid(phoneNumber)){
+        await sendOTP(otp, phoneNumber, organization);
+    }else{
+        // Phone Number not valid
+    }
 }
 
 const verifyUser = (req, res)=>{
     // Verify User by matching the OTP
-}
-
-function sendOTP(phoneNumber) {
-    // send OTP
-    // return the sent OTP
 }
 
 exports.module = {

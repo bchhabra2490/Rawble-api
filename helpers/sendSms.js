@@ -34,6 +34,7 @@ const sendOtp = (otp, phoneNumber, organisation)=>{
     });
     
     req.end();
+    
 }
 
 module.exports = {
