@@ -9,4 +9,4 @@ const MaterialModel = mongoose.model('Material', new Schema({
     price: { type: Number, required:true }
 }));
 
-module.exports = MaterialModel;
+export default MaterialModel;

@@ -1,6 +1,8 @@
 import statusCode from '../helpers/statusCode';
 const fs   = require('fs');
 const publicKEY  = fs.readFileSync('./public.key', 'utf8');
+const privateKEY  = fs.readFileSync('./private.key', 'utf8');
+
 const i  = 'Rawble';          // Issuer 
 const a  = 'https://rawble.com'; // Audience
 

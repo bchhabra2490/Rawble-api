@@ -19,4 +19,4 @@ const UserModel = mongoose.model('User', new Schema({
     id: String
 }));
 
-module.exports = UserModel;
+export default UserModel;
