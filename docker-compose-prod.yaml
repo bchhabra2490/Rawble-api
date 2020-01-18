@@ -1,0 +1,28 @@
+version: '2.4'
+
+services:
+  rawble-api:
+    container_name: rawble-api
+    image: rawble-api
+    ports: 
+    - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_URL=mongodb://mongo-db:27017
+      - MSG91_KEY=266559AxxRWJ2yb5c835a30
+    networks:
+      - RAWBLE-APP
+    depends_on: 
+      - mongo-db
+  mongo-db:
+    container_name: mongo-db
+    image: mongo
+    ports:
+    - "27017:27017"
+    networks: 
+      - RAWBLE-APP
+
+networks:
+  RAWBLE-APP:
+    name: RAWBLE-APP
+    driver: bridge

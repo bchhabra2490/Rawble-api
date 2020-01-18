@@ -1,0 +1,31 @@
+version: '2.4'
+
+services:
+  rawble-api:
+    container_name: rawble-api
+    build: ./
+    image: rawble-api
+    restart: always
+    volumes:
+    - ./:/usr/src/app/
+    ports: 
+    - "3000:3000"
+    env_file:
+      - .env
+    working_dir: /usr/src/app/
+    networks:
+      - RAWBLE-APP
+    depends_on: 
+      - mongo-db
+  mongo-db:
+    container_name: mongo-db
+    image: mongo
+    ports:
+    - "27017:27017"
+    networks: 
+      - RAWBLE-APP
+
+networks:
+  RAWBLE-APP:
+    name: RAWBLE-APP
+    driver: bridge

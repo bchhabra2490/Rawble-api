@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rawble-api
+  name: rawble-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rawble-api
+  template:
+    metadata:
+      labels:
+        app: rawble-api
+    spec:
+      containers:
+      - image: gcr.io/inspiring-wares-261507/opius-crud:1.4.0
+        name: crud-api
+        env:
+          - name: MSG91_KEY
+            value: "266559AxxRWJ2yb5c835a30"
+          - name: DB_URL
+            value: "mongodb://localhost:27017"
+          - name: PORT
+            value: "3000"
+        ports:
+            - containerPort: 3000
+              name: http
