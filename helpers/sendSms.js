@@ -37,7 +37,7 @@ const sendOtp = (otp, phoneNumber, organisation)=>{
     
 }
 
-module.exports = {
+export default {
     isPhoneNumberValid: isPhoneNumberValid,
     sendOtp: sendOtp
 }

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
 const TicketModel = mongoose.model('Ticket', new Schema({ 
     id: String,

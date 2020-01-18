@@ -3,19 +3,18 @@ import MaterialModel from '../models/materialModel';
 
 const addMaterial = (req, res)=>{
     // Create a new Material
-    const material = {
-        name: req.name,
-        category: req.category,
+    const material = new MaterialModel({
+        name: req.body.name,
+        category: req.body.category,
         imageUrl: "",
         imageMeta: {},
-        price: parseFloat(req.price)
-    }
+        price: parseFloat(req.body.price)
+    })
 
-    MaterialModel.create(material)
-    .then((err, data)=>{
-        if(err || !data){
-            console.log("Error in Creating material ", err);
-            statusCode.serverFailure.reason['error'] = err;
+    material.save()
+    .then((data)=>{
+        if(!data){
+            console.log("Error in Creating material ");
             res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
         }else{
             // Material Created
@@ -32,18 +31,13 @@ const addMaterial = (req, res)=>{
 
 const getMaterial = (req, res)=>{
     // Add a new material
-    MaterialModel.find({name: req.name})
-    .then((err, data)=>{
-        if(err || !data){
-            console.log("Error in Getting material data ", err);
-            statusCode.serverFailure.reason['error'] = err;
-            res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
-        }
-        else if(data.length>0){
-            statusCode.success.reason["data"] = data;
-            res.status(statusCode.success.code).json(statusCode.success.reason);
-        }else{
+    MaterialModel.find({name: req.params.name})
+    .then(data=>{
+        if(!data){
             res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
+        }else{
+            statusCode.success.reason["data"] = data;
+            res.status(statusCode.success.code).json(statusCode.success.reason);   
         }
     })
     .catch(error=>{
@@ -57,19 +51,18 @@ const getAllMaterials = (req, res)=>{
     // Get all materials
     // Params: limit
     MaterialModel.find({})
-    .then((err, data)=>{
-        if(err || !data){
-            console.log("Error in Getting material data ", err);
-            statusCode.serverFailure.reason['error'] = err;
-            res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
-        }else{
+    .then((data)=>{
+        if(!data){
+            res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
+        }
+        else{
             statusCode.success.reason["data"] = data;
             res.status(statusCode.success.code).json(statusCode.success.reason);
         }
         
     })
     .catch(error=>{
-        console.log("Error in Getting material data ", error);
+        console.log("Error in Getting all material data ", error);
         statusCode.serverFailure.reason['error'] = error;
         res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
     })

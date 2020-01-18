@@ -1,20 +1,20 @@
 import statusCode from '../helpers/statusCode';
-import { sendOTP, isPhoneNumberValid } from '../helpers/sendSms';
+import sendSms from '../helpers/sendSms';
 import getToken from '../helpers/getToken';
 import UserModel from '../models/userModel';
 
 const login = (req, res)=>{
     // User Login
-    const email = req.email;
-    const password = req.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     UserModel.findOne({email: email, password: password})
-    .then((err, data)=>{
-        if(err || !data){
-            res.status(statusCode.unauthorised.code).json(statusCode.unauthorised.reason);
+    .then((data)=>{
+        if(!data){
+            res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
         }
         else{
-            payload = {
+            const payload = {
                 'email': data.email
             }
             const token = getToken(payload);
@@ -29,31 +29,30 @@ const login = (req, res)=>{
     })
 }
 
-const createUser = async (req, res)=>{
+const createUser = (req, res)=>{
     // Create a new User
     // Send OTP for verification
 
-
-    const user = {
+    const user = new UserModel({
         id: '',
-        name: req.name,
-        phoneNumber: req.phoneNumber,
-        company: req.company,
-        email: req.email,
-        password: req.password,
-        address: req.address,
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        company: req.body.company,
+        email: req.body.email,
+        password: req.body.password,
+        address: req.body.address,
         isVerified: false,
         isActive: true,
-        username: req.username,
+        username: req.body.username,
         level: 0 // 0 -> Normal User, 1 -> Admin rights
-    }
+    })
 
-    if(isPhoneNumberValid(user.phoneNumber)){
-
+    if(sendSms.isPhoneNumberValid(user.phoneNumber)){
+        const otp = Math.floor(1000 + Math.random() * 9000)
         /// Generate OTP
         user.otp = otp;
         try{
-            await sendOTP(otp, user.phoneNumber, organization);
+            sendSms.sendOTP(otp, user.phoneNumber, user.company);
         }catch(error){
             console.log("Cannot send OTP", error);
         }
@@ -63,11 +62,10 @@ const createUser = async (req, res)=>{
         res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
     }
 
-    UserModel.create(user)
-    .then((err, data)=>{
-        if(err){
-            console.log("Error in user creation ", error);
-            statusCode.serverFailure.reason['error'] = error;
+    user.save()
+    .then(data=>{
+        if(!data){
+            console.log("Error in user creation ");
             res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
         }else{
             res.status(statusCode.success.code).json(statusCode.success.reason);
@@ -87,12 +85,13 @@ const verifyUser = (req, res)=>{
     email = req.decoded.email;
     UserModel.findOne({email: email})
     .then((err, data)=>{
-        if(err || !data){
-            console.log("Error", error);
-            statusCode.serverFailure.reason["error"] = error;
+        if(err){
+            console.log("Error", err);
+            statusCode.serverFailure.reason["error"] = err;
             res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
-        }
-        if(!data.isVerified){
+        }else if(!data){
+            res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
+        }else if(!data.isVerified){
             if(otp === data.otp){
                 data.isVerified = true
                 data.save()
@@ -113,8 +112,37 @@ const verifyUser = (req, res)=>{
     })
 }
 
-exports.module = {
+const resendOTP = (req, res)=>{
+    const email = req.decoded.email;
+    UserModel.findOne({email: email})
+    .then((err, data)=>{
+        if(err){
+            console.log("Error", err);
+            statusCode.serverFailure.reason["error"] = err;
+            res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
+        }else if(!data){
+            res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
+        }else{
+            const otp = '';
+            try{
+                sendOTP(otp, data.phoneNumber, data.company);
+                data.otp = otp;
+                data.save()
+            }catch(error){
+                console.log("Cannot send OTP", error);
+            }
+        }
+    })
+    .catch(error=>{
+        console.log("Error", error);
+        statusCode.serverFailure.reason["error"] = error;
+        res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
+    })
+}
+
+export default {
     login: login,
     createUser: createUser,
-    verifyUser: verifyUser
+    verifyUser: verifyUser,
+    resendOTP: resendOTP,
 };

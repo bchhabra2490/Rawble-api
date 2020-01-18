@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 dotenv.config();
 const d = domain.create()
 const app = express();
+app.use(express.json())
 var router = express.Router();
 const port = process.env.PORT || 3000;
 const dbUrl = process.env.DB_URL;
@@ -42,18 +43,13 @@ app.use(function(req, res, next) {
 router.get('/', function(req, res, next) {
     res.json({ title: 'Express' });
 });
-router.post('/login', function(req, res, next) {
-    res.json({ title: 'Express' });
-});
-router.get('/signup', function(req, res, next) {
-    res.json({ title: 'Express' });
-});
+
 app.all('/', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-app.all('/', router);
+// app.use('/', router);
 app.use('/api/v1', indexRouter);
 
 app.listen(port);
