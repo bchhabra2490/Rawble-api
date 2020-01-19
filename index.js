@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json())
 var router = express.Router();
 const port = process.env.PORT || 3000;
-const dbUrl = process.env.DB_URL || 'mongodb+srv://rawble:5FcL9EIscFQiZmfC@rawble-c1wkq.mongodb.net/test?retryWrites=true&w=majority';
+const dbUrl = process.env.DB_URL;
 
 
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
