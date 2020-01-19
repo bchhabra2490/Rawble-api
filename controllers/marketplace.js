@@ -8,6 +8,7 @@ const addMaterial = (req, res)=>{
         category: req.body.category,
         imageUrl: "",
         imageMeta: {},
+        unit: req.body.unit,
         price: parseFloat(req.body.price)
     })
 

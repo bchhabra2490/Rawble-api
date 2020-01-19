@@ -8,6 +8,7 @@ const MaterialModel = mongoose.model('Material', new Schema({
     id: String,
     imageUrl: String,
     imageMeta: Object,
+    unit: {type: String, default: 'kg'},
     price: { type: Number, required:true }
 }));
 
