@@ -80,7 +80,7 @@ const createUser = (req, res)=>{
         /// Generate OTP
         user.otp = otp;
         try{
-            sendSms.sendOTP(otp, user.phoneNumber, user.company);
+            sendSms.sendOtp(otp, user.phoneNumber, user.company);
         }catch(error){
             console.log("Cannot send OTP", error);
         }
@@ -96,6 +96,13 @@ const createUser = (req, res)=>{
             console.log("Error in user creation ");
             res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
         }else{
+            const payload = {
+                'email': data.email
+            }
+            const token = getToken(payload);
+            statusCode.success.reason['token'] = token;
+            data.otp = '-';
+            statusCode.success.reason['data'] = data;
             res.status(statusCode.success.code).json(statusCode.success.reason);
         }
         
