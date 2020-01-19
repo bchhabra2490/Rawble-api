@@ -2,6 +2,7 @@ import express from 'express';
 var router = express.Router();
 
 import userController from '../controllers/user';
+import authController from '../controllers/auth';
 
 router.get('/', (req, res)=>{
     res.status(500).json({message: "Hello world from User"})
@@ -9,6 +10,10 @@ router.get('/', (req, res)=>{
 
 router.post('/login', (req, res)=>{
     userController.login(req, res);
+})
+
+router.post('/authenticate', authController.isAuthenticated,(req, res)=>{
+    userController.authenticate(req, res);
 })
 
 router.post('/signup', (req, res)=>{

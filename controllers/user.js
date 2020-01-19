@@ -19,6 +19,35 @@ const login = (req, res)=>{
             }
             const token = getToken(payload);
             statusCode.success.reason['token'] = token;
+            data.otp = "-";
+            statusCode.success.reason['data'] = data;
+            res.status(statusCode.success.code).json(statusCode.success.reason);
+        }
+    })
+    .catch(error=>{
+        console.log("Error in Creating material ", error);
+        statusCode.serverFailure.reason['error'] = error;
+        res.status(statusCode.serverFailure.code).json(statusCode.serverFailure.reason);
+    })
+}
+
+const authenticate = (req, res)=>{
+    // User Login
+    const email = req.decoded.email;
+
+    UserModel.findOne({email: email})
+    .then((data)=>{
+        if(!data){
+            res.status(statusCode.notFound.code).json(statusCode.notFound.reason);
+        }
+        else{
+            const payload = {
+                'email': data.email
+            }
+            const token = getToken(payload);
+            statusCode.success.reason['token'] = token;
+            data.otp = "-";
+            statusCode.success.reason['data'] = data;
             res.status(statusCode.success.code).json(statusCode.success.reason);
         }
     })
@@ -43,7 +72,6 @@ const createUser = (req, res)=>{
         address: req.body.address,
         isVerified: false,
         isActive: true,
-        username: req.body.username,
         level: 0 // 0 -> Normal User, 1 -> Admin rights
     })
 
@@ -145,4 +173,5 @@ export default {
     createUser: createUser,
     verifyUser: verifyUser,
     resendOTP: resendOTP,
+    authenticate: authenticate
 };

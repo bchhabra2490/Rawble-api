@@ -4,6 +4,8 @@ import path from 'path';
 import dotenv from 'dotenv';
 import domain from 'domain';
 import mongoose from 'mongoose';
+import cors from 'cors';
+
 
 dotenv.config();
 const d = domain.create()
@@ -44,11 +46,11 @@ router.get('/', function(req, res, next) {
     res.json({ title: 'Express' });
 });
 
-app.all('/', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+app.use(cors({
+	origin: true,
+	// ['http://localhost:2000','https://m.tripshire.com','http://localhost:2001','http://localhost:3000','https://www.tripshire.com', 'https://insider.tripshire.com','https://kdhingra307.github.io','https://admin.tripshire.com','tripshire.com'],
+	credentials: true,
+}))
 // app.use('/', router);
 app.use('/api/v1', indexRouter);
 

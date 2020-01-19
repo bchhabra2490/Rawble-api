@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const UserModel = mongoose.model('User', new Schema({ 
     name: String,
     email: {type: String,lowercase: true , index : { unique: true }},
-    username: String,
     password: { type: String, required:true , select:true },
     company: { type: String, required:true },
     phoneNumber: { type: String, required:true },

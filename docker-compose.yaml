@@ -6,13 +6,10 @@ services:
     build: ./
     image: rawble-api
     restart: always
-    volumes:
-    - ./:/usr/src/app/
     ports: 
     - "3000:3000"
     env_file:
       - .env
-    working_dir: /usr/src/app/
     networks:
       - RAWBLE-APP
     depends_on: 

@@ -36,6 +36,6 @@ const isAuthenticated = (req, res, next)=>{
     }
 }
 
-module.exports = {
+export default {
     isAuthenticated: isAuthenticated
 }
